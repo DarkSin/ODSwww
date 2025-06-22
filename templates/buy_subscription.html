@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Покупка подписки{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Выберите тариф</h2>
+    <div class="row g-4 justify-content-center">
+        {% for tariff in tariffs %}
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm {% if user_subscription and user_subscription.tariff_id == tariff.id and user_subscription.end_date > now %}border-primary{% endif %}">
+                <div class="card-body text-center p-4">
+                    <h3 class="h5 mb-4">{{ tariff.name }}</h3>
+                    <div class="display-4 mb-4">{{ tariff.price }} ₽</div>
+                    <ul class="list-unstyled mb-4">
+                        <li><b>Длительность:</b> {{ tariff.duration_days // 30 }} мес.</li>
+                        {% if tariff.module_limit %}
+                        <li><b>Модулей:</b> до {{ tariff.module_limit }}</li>
+                        {% else %}
+                        <li><b>Модулей:</b> неограниченно</li>
+                        {% endif %}
+                        <li>{{ tariff.description }}</li>
+                    </ul>
+                    {% if user_subscription and user_subscription.end_date > now %}
+                        {% if user_subscription.tariff_id == tariff.id %}
+                            <form method="post" action="{{ url_for('buy_tariff', tariff_id=tariff.id) }}">
+                                <button class="btn btn-primary w-100" type="submit">Продлить</button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-secondary w-100" disabled>Доступно после окончания текущей подписки</button>
+                        {% endif %}
+                    {% else %}
+                        <form method="post" action="{{ url_for('buy_tariff', tariff_id=tariff.id) }}">
+                            <button class="btn btn-primary w-100" type="submit">Купить</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Назад в личный кабинет</a>
+    </div>
+</div>
+{% endblock %}

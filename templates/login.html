@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Вход - Управление электрощитами{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="card-body">
+            <div class="auth-logo">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo">
+                <h4 class="auth-title">Вход в систему</h4>
+                <p class="auth-subtitle">Введите ваши данные для входа</p>
+            </div>
+            
+            <form id="loginForm" method="POST" action="{{ url_for('auth.login') }}" class="auth-form">
+                <div class="mb-4">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Введите ваш email">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password" class="form-label">Пароль</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Введите ваш пароль">
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">Запомнить меня</label>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt me-2"></i>Войти
+                    </button>
+                    <div class="text-center">
+                        <a href="{{ url_for('auth.forgot_password') }}" class="text-primary">Забыли пароль?</a>
+                        <span class="text-muted mx-2">|</span>
+                        <span class="text-muted">Нет аккаунта?</span>
+                        <a href="{{ url_for('auth.register') }}" class="text-primary">Зарегистрироваться</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log('Скрипт валидации формы входа загружен');
+    
+    // Валидация формы входа
+    const loginValidation = new JustValidate('#loginForm', {
+        errorLabelCssClass: 'just-validate-error-label',
+        errorFieldCssClass: 'just-validate-error-field',
+        successFieldCssClass: 'just-validate-success-field',
+        errorLabelPosition: 'bottom',
+        validateBeforeSubmitting: true,
+        tooltip: {
+            position: 'top'
+        }
+    });
+
+    loginValidation
+        .addField('#email', [
+            {
+                rule: 'required',
+                errorMessage: 'Email обязателен',
+            },
+            {
+                rule: 'email',
+                errorMessage: 'Введите корректный email',
+            }
+        ])
+        .addField('#password', [
+            {
+                rule: 'required',
+                errorMessage: 'Пароль обязателен',
+            }
+        ])
+        .onSuccess(function(event) {
+            console.log('Форма входа валидна, отправляем...');
+            event.target.submit();
+        });
+        
+    // Добавляем обработчик отправки формы для отладки
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        console.log('Форма входа отправляется...');
+    });
+</script>
+{% endblock %} 

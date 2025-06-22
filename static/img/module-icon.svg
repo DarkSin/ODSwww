@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фон -->
+    <rect x="2" y="2" width="20" height="20" rx="4" fill="#2A2F4F"/>
+    
+    <!-- Верхняя панель -->
+    <rect x="4" y="4" width="16" height="4" rx="2" fill="#7B66FF"/>
+    
+    <!-- Индикаторы -->
+    <circle cx="7" cy="12" r="2" fill="#5CB874"/>
+    <circle cx="12" cy="12" r="2" fill="#FF6B6B"/>
+    <circle cx="17" cy="12" r="2" fill="#5CB874"/>
+    
+    <!-- Нижняя панель -->
+    <rect x="4" y="16" width="16" height="4" rx="2" fill="#3A3F5F"/>
+</svg> 

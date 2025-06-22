@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block title %}Админ-панель - Управление электрощитами{% endblock %}
+{% block content %}
+<div class="dashboard-container py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <!-- Кнопка 'Пользователи' удалена -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <!-- Боковая панель -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="avatar-circle bg-primary text-white me-3">
+                                {{ current_user.name[0] }}
+                            </div>
+                            <div>
+                                <h5 class="mb-0">{{ current_user.name }}</h5>
+                                <small class="text-muted">{{ current_user.email }}</small>
+                            </div>
+                        </div>
+                        <ul class="nav flex-column nav-pills">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#users" data-bs-toggle="pill">
+                                    <i class="fas fa-users me-2"></i>Пользователи
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#requests" data-bs-toggle="pill">
+                                    <i class="fas fa-inbox me-2"></i>Заявки
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#create-relay" data-bs-toggle="pill">
+                                    <i class="fas fa-plus me-2"></i>Создать реле
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <!-- Основной контент -->
+                <div class="tab-content">
+                    <!-- Пользователи -->
+                    <div class="tab-pane fade show active" id="users">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title mb-4">Пользователи</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Имя</th>
+                                                <th>Email</th>
+                                                <th>Телефон</th>
+                                                <th>Админ</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in users %}
+                                            <tr>
+                                                <td>{{ user.id }}</td>
+                                                <td><input type="text" class="form-control form-control-sm" value="{{ user.name }}" name="name" data-user-id="{{ user.id }}" /></td>
+                                                <td><input type="email" class="form-control form-control-sm" value="{{ user.email }}" name="email" data-user-id="{{ user.id }}" /></td>
+                                                <td><input type="text" class="form-control form-control-sm" value="{{ user.phone }}" name="phone" data-user-id="{{ user.id }}" /></td>
+                                                <td>
+                                                    <input type="checkbox" {% if user.is_admin %}checked{% endif %} data-user-id="{{ user.id }}" name="is_admin" />
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button class="btn btn-sm btn-success" onclick="saveUser('{{ user.id }}')">Сохранить</button>
+                                                        <button class="btn btn-sm btn-danger" onclick="deleteUser('{{ user.id }}')">Удалить</button>
+                                                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin_manage_user', user_id=user.id) }}">Подробнее</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="modules-row-{{ user.id }}" style="display:none;">
+                                                <td colspan="6">
+                                                    <div id="modules-content-{{ user.id }}"></div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Заявки -->
+                    <div class="tab-pane fade" id="requests">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title mb-4">Заявки на добавление реле</h4>
+                                <div class="table-responsive">
+                                    {% if requests and requests|length > 0 %}
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Пользователь</th>
+                                                <th>Название реле</th>
+                                                <th>Телефон</th>
+                                                <th>Email</th>
+                                                <th>Описание</th>
+                                                <th>Дата</th>
+                                                <th>Статус</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for req in requests %}
+                                            <tr>
+                                                <td>{{ req.id }}</td>
+                                                <td>{{ req.user.name }}</td>
+                                                <td>{{ req.relay_name }}</td>
+                                                <td>{{ req.phone_number }}</td>
+                                                <td>{{ req.user.email }}</td>
+                                                <td>{{ req.description }}</td>
+                                                <td>{{ req.created_at }}</td>
+                                                <td>
+                                                    <form method="post" action="{{ url_for('admin_request_status', request_id=req.id) }}" class="d-inline">
+                                                        <select class="form-select form-select-sm d-inline w-auto" name="status" onchange="this.form.submit()">
+                                                            <option value="pending" {% if req.status == 'pending' %}selected{% endif %}>В ожидании</option>
+                                                            <option value="approved" {% if req.status == 'approved' %}selected{% endif %}>Принято</option>
+                                                            <option value="rejected" {% if req.status == 'rejected' %}selected{% endif %}>Отклонено</option>
+                                                        </select>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url_for('admin_create_relay', request_id=req.id) }}" class="btn btn-sm btn-primary">Создать реле</a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% else %}
+                                    <p>Нет заявок на добавление реле.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Создать реле -->
+                    <div class="tab-pane fade" id="create-relay">
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body">
+                                <h4 class="card-title mb-4">Создать новое реле</h4>
+                                <form id="create-relay-form">
+                                    <div class="mb-3">
+                                        <label class="form-label">ID реле</label>
+                                        <input type="number" class="form-control" name="relay_id" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Название</label>
+                                        <input type="text" class="form-control" name="name" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Описание</label>
+                                        <input type="text" class="form-control" name="description" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Номер телефона</label>
+                                        <input type="text" class="form-control" name="phone_number" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Пароль</label>
+                                        <input type="text" class="form-control" name="password" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">MO</label>
+                                        <input type="text" class="form-control" name="MO" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">TP_RP</label>
+                                        <input type="text" class="form-control" name="TP_RP" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Активность</label>
+                                        <input type="checkbox" name="Activity" checked />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Время включения</label>
+                                        <input type="text" class="form-control" name="TimeOn" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Время выключения</label>
+                                        <input type="text" class="form-control" name="TimeOff" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Статус</label>
+                                        <input type="text" class="form-control" name="Status" value="Активно" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Создать реле</button>
+                                </form>
+                                <div id="create-relay-result" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block extra_js %}
+<script>
+    function showModules(userId) {
+        const row = document.getElementById('modules-row-' + userId);
+        if (row.style.display === 'none') {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    }
+    function saveUser(userId) {
+        alert('Сохранить пользователя ' + userId + ' (реализовать через AJAX)');
+    }
+    function deleteUser(userId) {
+        if (confirm('Удалить пользователя ' + userId + '?')) {
+            alert('Удалить пользователя ' + userId + ' (реализовать через AJAX)');
+        }
+    }
+    document.getElementById('create-relay-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('create-relay-result').innerHTML = '<div class="alert alert-info">(Заглушка) Реле будет создано через API</div>';
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.location.hash) {
+            var tabTrigger = document.querySelector('a[href="' + window.location.hash + '"]');
+            if (tabTrigger) {
+                var tab = new bootstrap.Tab(tabTrigger);
+                tab.show();
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %} 

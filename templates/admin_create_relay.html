@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Создать реле по заявке{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Создать реле для пользователя: {{ user.name }} ({{ user.email }})</h4>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Почта пользователя</label>
+                            <input type="email" class="form-control" name="user_email" value="{{ user.email }}" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ID реле</label>
+                            <input type="number" class="form-control" name="relay_id" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Название</label>
+                            <input type="text" class="form-control" name="name" value="{{ req.relay_name }}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Описание</label>
+                            <input type="text" class="form-control" name="description" value="{{ req.description }}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Номер телефона</label>
+                            <input type="text" class="form-control" name="phone_number" value="{{ req.phone_number }}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            <input type="text" class="form-control" name="password" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">MO</label>
+                            <input type="text" class="form-control" name="MO" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">TP_RP</label>
+                            <input type="text" class="form-control" name="TP_RP" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Активность</label>
+                            <input type="checkbox" name="Activity" checked />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Время включения</label>
+                            <input type="text" class="form-control" name="TimeOn" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Время выключения</label>
+                            <input type="text" class="form-control" name="TimeOff" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Статус</label>
+                            <input type="text" class="form-control" name="Status" value="Активно" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Создать реле</button>
+                        <a href="{{ url_for('admin_panel') }}" class="btn btn-secondary ms-2">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

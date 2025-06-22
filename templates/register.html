@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация - Управление электрощитами{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="card-body">
+            <div class="auth-logo">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo">
+                <h4 class="auth-title">Регистрация</h4>
+                <p class="auth-subtitle">Создайте новый аккаунт</p>
+            </div>
+            
+            <form id="registerForm" method="POST" action="{{ url_for('auth.register') }}" class="auth-form">
+                <div class="mb-4">
+                    <label for="name" class="form-label">Имя</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Введите ваше имя">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Введите ваш email">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="phone" class="form-label">Телефон</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password" class="form-label">Пароль</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Создайте пароль">
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password_confirm" class="form-label">Подтверждение пароля</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Подтвердите пароль">
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password_confirm')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" name="terms">
+                    <label class="form-check-label" for="terms">
+                        Я согласен с <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">условиями использования</a>
+                    </label>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-2"></i>Зарегистрироваться
+                    </button>
+                    <div class="text-center">
+                        <span class="text-muted">Уже есть аккаунт?</span>
+                        <a href="{{ url_for('auth.login') }}" class="text-primary">Войти</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно с условиями использования -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Условия использования</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Текст условий использования...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log('Скрипт валидации формы регистрации загружен');
+    
+    // Маска для телефона
+    const phoneInput = document.getElementById('phone');
+    phoneInput.addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        e.target.value = !x[2] ? x[1] : '+7 (' + x[2] + ') ' + (x[3] ? x[3] + '-' : '') + (x[4] ? x[4] + '-' : '') + x[5];
+    });
+
+    // Валидация формы регистрации
+    const registerValidation = new JustValidate('#registerForm', {
+        errorLabelCssClass: 'just-validate-error-label',
+        errorFieldCssClass: 'just-validate-error-field',
+        successFieldCssClass: 'just-validate-success-field',
+        errorLabelPosition: 'bottom',
+        validateBeforeSubmitting: true,
+        tooltip: {
+            position: 'top'
+        }
+    });
+
+    registerValidation
+        .addField('#name', [
+            {
+                rule: 'required',
+                errorMessage: 'Имя обязательно',
+            },
+            {
+                rule: 'minLength',
+                value: 2,
+                errorMessage: 'Имя должно содержать минимум 2 символа',
+            }
+        ])
+        .addField('#email', [
+            {
+                rule: 'required',
+                errorMessage: 'Email обязателен',
+            },
+            {
+                rule: 'email',
+                errorMessage: 'Введите корректный email',
+            }
+        ])
+        .addField('#phone', [
+            {
+                rule: 'required',
+                errorMessage: 'Телефон обязателен',
+            },
+            {
+                rule: 'customRegexp',
+                value: /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
+                errorMessage: 'Введите корректный номер телефона',
+            }
+        ])
+        .addField('#password', [
+            {
+                rule: 'required',
+                errorMessage: 'Пароль обязателен',
+            },
+            {
+                rule: 'minLength',
+                value: 8,
+                errorMessage: 'Пароль должен содержать минимум 8 символов',
+            }
+        ])
+        .addField('#password_confirm', [
+            {
+                rule: 'required',
+                errorMessage: 'Подтверждение пароля обязательно',
+            },
+            {
+                rule: 'custom',
+                validator: function(value) {
+                    return value === document.getElementById('password').value;
+                },
+                errorMessage: 'Пароли не совпадают',
+            }
+        ])
+        .addField('#terms', [
+            {
+                rule: 'required',
+                errorMessage: 'Необходимо согласиться с условиями использования',
+            }
+        ])
+        .onSuccess(function(event) {
+            console.log('Форма регистрации валидна, отправляем...');
+            event.target.submit();
+        });
+        
+    // Добавляем обработчик отправки формы для отладки
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        console.log('Форма регистрации отправляется...');
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фоновые волны -->
+    <path d="M0 200C100 150 200 250 300 200C400 150 500 250 600 200V400H0V200Z" fill="#7B66FF" fill-opacity="0.1"/>
+    <path d="M0 250C100 200 200 300 300 250C400 200 500 300 600 250V400H0V250Z" fill="#5C4BFF" fill-opacity="0.05"/>
+    
+    <!-- Модули -->
+    <g transform="translate(100, 100)">
+        <!-- Модуль 1 -->
+        <rect x="0" y="0" width="80" height="120" rx="10" fill="#2A2F4F"/>
+        <rect x="10" y="10" width="60" height="20" rx="5" fill="#7B66FF"/>
+        <circle cx="20" cy="50" r="5" fill="#5CB874"/>
+        <circle cx="40" cy="50" r="5" fill="#FF6B6B"/>
+        <rect x="10" y="70" width="60" height="40" rx="5" fill="#3A3F5F"/>
+    </g>
+    
+    <g transform="translate(300, 150)">
+        <!-- Модуль 2 -->
+        <rect x="0" y="0" width="80" height="120" rx="10" fill="#2A2F4F"/>
+        <rect x="10" y="10" width="60" height="20" rx="5" fill="#7B66FF"/>
+        <circle cx="20" cy="50" r="5" fill="#5CB874"/>
+        <circle cx="40" cy="50" r="5" fill="#5CB874"/>
+        <rect x="10" y="70" width="60" height="40" rx="5" fill="#3A3F5F"/>
+    </g>
+    
+    <g transform="translate(500, 100)">
+        <!-- Модуль 3 -->
+        <rect x="0" y="0" width="80" height="120" rx="10" fill="#2A2F4F"/>
+        <rect x="10" y="10" width="60" height="20" rx="5" fill="#7B66FF"/>
+        <circle cx="20" cy="50" r="5" fill="#FF6B6B"/>
+        <circle cx="40" cy="50" r="5" fill="#5CB874"/>
+        <rect x="10" y="70" width="60" height="40" rx="5" fill="#3A3F5F"/>
+    </g>
+    
+    <!-- Соединительные линии -->
+    <path d="M180 160L300 210" stroke="#7B66FF" stroke-width="2" stroke-dasharray="5 5"/>
+    <path d="M380 210L500 160" stroke="#7B66FF" stroke-width="2" stroke-dasharray="5 5"/>
+    
+    <!-- Иконки SMS -->
+    <g transform="translate(240, 185)">
+        <rect x="0" y="0" width="20" height="15" rx="2" fill="#7B66FF"/>
+        <path d="M5 5L15 5L10 12L5 5Z" fill="#FFFFFF"/>
+    </g>
+    
+    <g transform="translate(440, 185)">
+        <rect x="0" y="0" width="20" height="15" rx="2" fill="#7B66FF"/>
+        <path d="M5 5L15 5L10 12L5 5Z" fill="#FFFFFF"/>
+    </g>
+</svg> 

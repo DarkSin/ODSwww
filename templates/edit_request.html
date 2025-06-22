@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Редактировать заявку{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Редактировать заявку</h4>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Название реле</label>
+                            <input type="text" class="form-control" name="relay_name" value="{{ req.relay_name }}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Телефон для нового реле</label>
+                            <input type="text" class="form-control" name="phone_number" value="{{ req.phone_number }}" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Описание (необязательно)</label>
+                            <input type="text" class="form-control" name="description" value="{{ req.description }}" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary ms-2">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

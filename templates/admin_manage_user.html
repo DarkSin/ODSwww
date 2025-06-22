@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% block title %}Управление пользователем - Админ-панель{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2>Управление пользователем: {{ user.name }} (ID: {{ user.id }})</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Данные пользователя</h5>
+                    <p><b>Email:</b> {{ user.email }}</p>
+                    <p><b>Телефон:</b> {{ user.phone }}</p>
+                    <p><b>Админ:</b> {% if user.is_admin %}Да{% else %}Нет{% endif %}</p>
+                    <button class="btn btn-outline-secondary btn-sm mb-2" id="gen-user-pass">Сгенерировать новый пароль</button>
+                    <div id="new-user-pass" class="mt-2 text-success"></div>
+                    <form id="set-user-pass-form" method="post" action="{{ url_for('admin_set_user_password', user_id=user.id) }}" style="display:none;">
+                        <input type="hidden" name="password" id="set-user-pass-input">
+                    </form>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Подписки</h5>
+                    <ul class="list-group mb-2">
+                        {% for sub in subscriptions %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ sub.tariff.name }} (до {{ sub.end_date.strftime('%d.%m.%Y') }})
+                            {% if sub.is_active %}<span class="badge bg-success">Активна</span>{% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <form method="post" action="{{ url_for('admin_set_user_subscription', user_id=user.id) }}">
+                        <div class="mb-2">
+                            <label>Тариф</label>
+                            <select class="form-select" name="tariff_id">
+                                {% for tariff in tariffs %}
+                                <option value="{{ tariff.id }}">{{ tariff.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label>Дата окончания</label>
+                            <input type="date" class="form-control" name="end_date" required>
+                        </div>
+                        <button class="btn btn-primary btn-sm">Назначить/изменить подписку</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Реле пользователя</h5>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Серийный номер</th>
+                                <th>Телефон</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for module in modules %}
+                            <tr>
+                                <td>{{ module.id }}</td>
+                                <td>{{ module.name }}</td>
+                                <td>{{ module.serial_number }}</td>
+                                <td>{{ module.phone_number }}</td>
+                                <td>{{ module.status }}</td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editRelayModal" data-id="{{ module.id }}" data-name="{{ module.name }}" data-serial="{{ module.serial_number }}" data-phone="{{ module.phone_number }}" data-status="{{ module.status }}">Редактировать</button>
+                                        <button class="btn btn-sm btn-danger">Удалить</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="/admin#create-relay" class="btn btn-success btn-sm">Добавить реле</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Заявки пользователя</h5>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название реле</th>
+                                <th>Телефон</th>
+                                <th>Описание</th>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td>{{ req.id }}</td>
+                                <td>{{ req.relay_name }}</td>
+                                <td>{{ req.phone_number }}</td>
+                                <td>{{ req.description }}</td>
+                                <td>{{ req.created_at.strftime('%d.%m.%Y %H:%M') if req.created_at else '' }}</td>
+                                <td>{{ req.status }}</td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editRequestModal" data-id="{{ req.id }}" data-relay_name="{{ req.relay_name }}" data-phone="{{ req.phone_number }}" data-description="{{ req.description }}" data-status="{{ req.status }}">Редактировать</button>
+                                        <button class="btn btn-sm btn-danger" onclick="if(confirm('Удалить заявку?')) { document.getElementById('delete-request-{{ req.id }}').submit(); }">Удалить</button>
+                                        <form id="delete-request-{{ req.id }}" method="post" action="{{ url_for('admin_delete_request', user_id=user.id, request_id=req.id) }}" style="display:none;"></form>
+                                        <button class="btn btn-sm btn-secondary">Статус</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('admin_users') }}" class="btn btn-secondary mt-3">Назад к пользователям</a>
+</div>
+<!-- Модальное окно для редактирования реле -->
+<div class="modal fade" id="editRelayModal" tabindex="-1" aria-labelledby="editRelayModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" id="editRelayFormReal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editRelayModalLabel">Редактировать реле</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="relay_id" id="editRelayId">
+          <div class="mb-3">
+            <label for="editRelayName" class="form-label">Название</label>
+            <input type="text" class="form-control" name="name" id="editRelayName" required>
+          </div>
+          <div class="mb-3">
+            <label for="editRelaySerial" class="form-label">Серийный номер</label>
+            <input type="text" class="form-control" name="serial_number" id="editRelaySerial" required>
+          </div>
+          <div class="mb-3">
+            <label for="editRelayPhone" class="form-label">Телефон</label>
+            <input type="text" class="form-control" name="phone_number" id="editRelayPhone" required>
+          </div>
+          <div class="mb-3">
+            <label for="editRelayStatus" class="form-label">Статус</label>
+            <select class="form-select" name="status" id="editRelayStatus">
+              <option value="on">Активен</option>
+              <option value="off">Отключен</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Модальное окно для редактирования заявки -->
+<div class="modal fade" id="editRequestModal" tabindex="-1" aria-labelledby="editRequestModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" id="editRequestFormReal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editRequestModalLabel">Редактировать заявку</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="request_id" id="editRequestId">
+          <div class="mb-3">
+            <label for="editRequestRelayName" class="form-label">Название реле</label>
+            <input type="text" class="form-control" name="relay_name" id="editRequestRelayName" required>
+          </div>
+          <div class="mb-3">
+            <label for="editRequestPhone" class="form-label">Телефон</label>
+            <input type="text" class="form-control" name="phone_number" id="editRequestPhone" required>
+          </div>
+          <div class="mb-3">
+            <label for="editRequestDescription" class="form-label">Описание</label>
+            <input type="text" class="form-control" name="description" id="editRequestDescription">
+          </div>
+          <div class="mb-3">
+            <label for="editRequestStatus" class="form-label">Статус</label>
+            <select class="form-select" name="status" id="editRequestStatus">
+              <option value="pending">В ожидании</option>
+              <option value="approved">Принято</option>
+              <option value="rejected">Отклонено</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function generatePassword(length = 10) {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let pass = '';
+    for (let i = 0; i < length; i++) {
+        pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return pass;
+}
+
+document.getElementById('gen-user-pass').onclick = function() {
+    const pass = generatePassword();
+    document.getElementById('new-user-pass').innerText = pass;
+    document.getElementById('set-user-pass-input').value = pass;
+    // Отправляем форму через AJAX
+    fetch(document.getElementById('set-user-pass-form').action, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'password=' + encodeURIComponent(pass)
+    }).then(r => r.text()).then(() => {
+        document.getElementById('new-user-pass').innerText = pass + ' (сохранён)';
+    });
+};
+
+document.querySelectorAll('.gen-relay-pass').forEach(btn => {
+    btn.onclick = function() {
+        const pass = generatePassword();
+        const input = btn.closest('form').querySelector('input[name="password"]');
+        input.value = pass;
+    };
+});
+// Модальное окно редактирования реле
+const editRelayModal = document.getElementById('editRelayModal');
+editRelayModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    document.getElementById('editRelayId').value = button.getAttribute('data-id');
+    document.getElementById('editRelayName').value = button.getAttribute('data-name');
+    document.getElementById('editRelaySerial').value = button.getAttribute('data-serial');
+    document.getElementById('editRelayPhone').value = button.getAttribute('data-phone');
+    document.getElementById('editRelayStatus').value = button.getAttribute('data-status');
+});
+
+document.getElementById('editRelayFormReal').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var relayId = document.getElementById('editRelayId').value;
+    var userId = '{{ user.id }}';
+    this.action = '/admin/user/' + userId + '/module/' + relayId + '/edit';
+    this.submit();
+});
+// Модальное окно редактирования заявки
+const editRequestModal = document.getElementById('editRequestModal');
+editRequestModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    document.getElementById('editRequestId').value = button.getAttribute('data-id');
+    document.getElementById('editRequestRelayName').value = button.getAttribute('data-relay_name');
+    document.getElementById('editRequestPhone').value = button.getAttribute('data-phone');
+    document.getElementById('editRequestDescription').value = button.getAttribute('data-description');
+    document.getElementById('editRequestStatus').value = button.getAttribute('data-status');
+});
+document.getElementById('editRequestFormReal').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var requestId = document.getElementById('editRequestId').value;
+    var userId = '{{ user.id }}';
+    this.action = '/admin/user/' + userId + '/request/' + requestId + '/edit';
+    this.submit();
+});
+</script>
+{% endblock %}

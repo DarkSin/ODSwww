@@ -1,0 +1,507 @@
+:root {
+    --primary-color: #2A2F4F;
+    --accent-color: #7B66FF;
+    --accent-gradient: linear-gradient(45deg, #7B66FF, #5C4BFF);
+    --bg-color: #F5F5F5;
+    --success-color: #5CB874;
+    --error-color: #FF6B6B;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Навигация */
+.navbar {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+/* Кнопки */
+.btn-primary {
+    background: var(--accent-gradient);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(123, 102, 255, 0.2);
+}
+
+.btn-outline-primary {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    border-radius: 12px;
+}
+
+.btn-outline-primary:hover {
+    background: var(--accent-gradient);
+    border-color: transparent;
+}
+
+/* Карточки */
+.card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.card.popular {
+    border: 2px solid var(--accent-color);
+    transform: scale(1.05);
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Hero секция */
+.hero-section {
+    padding-top: 120px;
+    min-height: 100vh;
+    background: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: var(--accent-gradient);
+    opacity: 0.1;
+    clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.hero-section h1 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.hero-section .lead {
+    color: #6c757d;
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero-section img {
+    max-width: 100%;
+    height: auto;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Анимация пульсации для CTA кнопки */
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(123, 102, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(123, 102, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(123, 102, 255, 0);
+    }
+}
+
+/* Иконки */
+.text-primary {
+    color: var(--accent-color) !important;
+}
+
+/* Секции */
+section {
+    padding: 80px 0;
+}
+
+/* Футер */
+footer {
+    background-color: var(--primary-color);
+}
+
+.social-links a {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--accent-color) !important;
+    transform: translateY(-2px);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+    
+    .hero-section::before {
+        display: none;
+    }
+    
+    .card.popular {
+        transform: none;
+    }
+}
+
+/* Анимации AOS */
+[data-aos] {
+    pointer-events: none;
+}
+
+[data-aos].aos-animate {
+    pointer-events: auto;
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Общие стили */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Стили для форм авторизации */
+.auth-container {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin-top: 76px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-logo img {
+    height: 60px;
+    margin-bottom: 1rem;
+}
+
+.auth-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.auth-subtitle {
+    color: #6c757d;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.auth-form .form-label {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.auth-form .input-group {
+    margin-bottom: 1rem;
+}
+
+.auth-form .input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+    color: #6c757d;
+}
+
+.auth-form .form-control {
+    border-left: none;
+    padding: 0.75rem 1rem;
+}
+
+.auth-form .form-control:focus {
+    box-shadow: none;
+    border-color: var(--accent-color);
+}
+
+.auth-form .form-control::placeholder {
+    color: #95a5a6;
+}
+
+.auth-form .btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.auth-form .btn-primary {
+    background: var(--accent-gradient);
+    border: none;
+}
+
+.auth-form .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(123, 102, 255, 0.2);
+}
+
+.auth-form .btn-outline-primary {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.auth-form .btn-outline-primary:hover {
+    background: var(--accent-gradient);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(123, 102, 255, 0.2);
+}
+
+.auth-form .form-check-label {
+    color: #6c757d;
+}
+
+.auth-form .form-check-input:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.auth-form .text-muted {
+    color: #95a5a6 !important;
+}
+
+.auth-form .text-primary {
+    color: var(--accent-color) !important;
+}
+
+/* Стили для сообщений об ошибках */
+.auth-form .just-validate-error-label {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.auth-form .just-validate-error-field {
+    border-color: var(--error-color) !important;
+}
+
+.auth-form .just-validate-error-field:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 107, 107, 0.25) !important;
+}
+
+/* Анимации для форм */
+.auth-card {
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность для форм */
+@media (max-width: 576px) {
+    .auth-container {
+        padding: 1rem;
+    }
+    
+    .auth-card {
+        padding: 1.5rem;
+    }
+    
+    .auth-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Остальные стили */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+/* Стили для панели управления */
+.dashboard-container {
+    min-height: calc(100vh - 76px);
+    padding-top: 76px;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background-color: #007bff;
+    color: white;
+}
+
+.nav-pills .nav-link {
+    color: #6c757d;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Стили для таблиц */
+.table th {
+    font-weight: 600;
+    border-top: none;
+    color: #2c3e50;
+}
+
+.table td {
+    vertical-align: middle;
+    color: #6c757d;
+}
+
+/* Стили для значков состояния */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .auth-card {
+        margin: 1rem;
+    }
+    
+    .dashboard-container {
+        padding-top: 1rem;
+    }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="40" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Фоновая фигура -->
+    <path d="M10 20C10 14.4772 14.4772 10 20 10H180C185.523 10 190 14.4772 190 20C190 25.5228 185.523 30 180 30H20C14.4772 30 10 25.5228 10 20Z" fill="#2A2F4F"/>
+    
+    <!-- Иконка модуля -->
+    <path d="M30 15H35V25H30V15Z" fill="#7B66FF"/>
+    <path d="M40 15H45V25H40V15Z" fill="#7B66FF"/>
+    <path d="M50 15H55V25H50V15Z" fill="#7B66FF"/>
+    
+    <!-- Текст -->
+    <text x="70" y="25" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF">
+        SMS Control
+    </text>
+</svg> 
