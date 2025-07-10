@@ -57,30 +57,6 @@ python app.py
 http://localhost:5000
 ```
 
-## Структура проекта
-
-```
-electrical-control/
-├── app.py                 # Основной файл приложения
-├── models.py              # Модели базы данных
-├── auth.py                # Маршруты аутентификации
-├── init_db.py             # Скрипт инициализации БД
-├── requirements.txt       # Зависимости проекта
-├── README.md              # Документация
-├── static/                # Статические файлы
-│   ├── css/               # CSS стили
-│   ├── js/                # JavaScript файлы
-│   └── img/               # Изображения
-└── templates/             # HTML шаблоны
-    ├── base.html          # Базовый шаблон
-    ├── index.html         # Главная страница
-    ├── login.html         # Страница входа
-    ├── register.html      # Страница регистрации
-    ├── forgot_password.html # Страница восстановления пароля
-    ├── reset_password.html  # Страница сброса пароля
-    └── dashboard.html     # Панель управления
-```
-
 ## Лицензия
 
 MIT 
